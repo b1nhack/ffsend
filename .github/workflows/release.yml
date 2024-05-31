@@ -1,0 +1,22 @@
+name: build-release
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    name: build-release
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo b -r
+      - run: tar cf ffsend-aarch64-apple-darwin.tar target/release/ffsend
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: ffsend-aarch64-apple-darwin.tar
